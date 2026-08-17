@@ -33,7 +33,7 @@ export default function Splash() {
       // 모달 닫기 및 해당 방의 로그인 페이지로 이동
       setIsModalOpen(false);
       setInviteUrl('');
-      navigate(`/room/${roomId}/login`);
+      navigate(`/room/${roomId}/result`);
     } catch (err) {
       console.error(err);
       alert('올바른 링크 형식이 아닙니다.');
