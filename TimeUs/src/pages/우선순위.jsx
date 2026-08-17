@@ -23,6 +23,7 @@ export default function Priority() {
   const [sortOption, setSortOption] = useState('count'); 
   const [minCount, setMinCount] = useState(1); 
   const [allUsers, setAllUsers] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchAndCalculateRanking = async () => {
@@ -156,9 +157,10 @@ export default function Priority() {
         )}
       </div>
 
-      {/* 랭킹 목록 */}
+     {/* 랭킹 목록 */}
       <div className="ranking-list">
-        {rankingData.map((item, index) => (
+        {/* 전체 rankingData 중 펼침 여부에 따라 3개 또는 최대 10개만 슬라이스해서 렌더링 */}
+        {rankingData.slice(0, isExpanded ? 10 : 3).map((item, index) => (
           <div key={index} className={`ranking-card ${index === 0 ? 'top-rank' : ''}`}>
             <div className="rank-badge">{index + 1}위</div>
             <div className="rank-info">
@@ -169,8 +171,14 @@ export default function Priority() {
           </div>
         ))}
         {rankingData.length === 0 && <div className="no-data">조건에 맞는 등록된 일정이 없습니다.</div>}
-      </div>
 
+        {/* 결과가 3개를 초과할 때만 더보기 버튼 표시 */}
+        {rankingData.length > 3 && (
+          <button className="expand-btn" onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? '접기 ▲' : `10위까지 보기 (${rankingData.length > 10 ? 10 : rankingData.length}개) ▼`}
+          </button>
+        )}
+      </div>
       {/* 하단 뒤로가기 버튼 */}
       <button className="back-btn" onClick={() => navigate(-1)}>결과 화면으로 돌아가기</button>
     </div>
