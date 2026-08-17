@@ -1,0 +1,244 @@
+/* 1. 타이틀 및 서브 텍스트 왼쪽 정렬 */
+.priority-header {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.priority-title {
+  color: #000000;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  text-align: left;
+}
+
+.priority-sub {
+  color: #666666;
+  font-size: 14px;
+  margin: 0;
+  text-align: left;
+}
+
+/* -----------------------------
+   필터 및 검색 아코디언 UI
+------------------------------ */
+.filter-section {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.filter-toggle-btn {
+  width: 100%;
+  background: #f5f5f5;
+  border: none;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  font-size: 10px;
+  color: #888;
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.toggle-icon.open {
+  transform: rotate(0deg);
+}
+
+.filter-content {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+}
+
+/* 다중 선택 칩 (참여자, 인원) */
+.filter-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555555;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.filter-chip.active {
+  background: #f0f0f0;
+  border-color: #bbbbbb;
+  color: #000000;
+  font-weight: 700;
+}
+
+.filter-chip.active-dark {
+  background: #111111;
+  border-color: #111111;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* 정렬 라디오 그룹 */
+.sort-radio-group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sort-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.1s ease;
+}
+
+.sort-radio-label:last-child {
+  border-bottom: none;
+}
+
+.sort-radio-label input {
+  display: none;
+}
+
+.radio-custom {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+  display: inline-block;
+  position: relative;
+}
+
+.sort-radio-label.active {
+  background: #f7f7f7;
+  color: #000000;
+  font-weight: 700;
+}
+
+.sort-radio-label.active .radio-custom {
+  border-color: #111111;
+}
+
+.sort-radio-label.active .radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  background: #111111;
+  border-radius: 50%;
+}
+
+/* -----------------------------
+   랭킹 결과 카드
+------------------------------ */
+.ranking-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.ranking-card {
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.rank-badge {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111111;
+  min-width: 44px;
+}
+
+.rank-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rank-time {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.rank-count {
+  font-size: 13px;
+  color: #555555;
+}
+
+.count-number {
+  font-weight: 700;
+  color: #111111;
+}
+
+.rank-users {
+  font-size: 12px;
+  color: #888888;
+  margin-top: 2px;
+}
+
+.no-data {
+  text-align: center;
+  color: #999999;
+  padding: 40px 0;
+  font-size: 15px;
+}
+
+/* -----------------------------
+   뒤로가기 버튼 (검은 바탕 오버라이드)
+------------------------------ */
+.back-btn {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.back-btn:hover {
+  background-color: #333333;
+}

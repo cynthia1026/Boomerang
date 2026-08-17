@@ -1,0 +1,34 @@
+/* 결과화면 특화 래퍼 (수직 중앙 정렬) */
+.result-container {
+  background: #ffffff; width: 100%; min-height: 100vh; box-sizing: border-box; padding: 40px 24px;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; position: relative;
+}
+.result-container .logo-title { font-size: 40px; margin-bottom: 28px; }
+
+/* 섹션 및 태그 */
+.status-section, .schedule-section { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
+.section-header { width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.section-title { color: #000000; font-size: 20px; font-weight: 700; margin: 0; text-align: left; }
+.count-badge { color: #c4c4c4; font-size: 17px; font-weight: 500; }
+.user-tag-list { display: flex; flex-direction: row; gap: 8px; }
+.user-tag { width: 90px; height: 38px; background-color: #d9d9d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #000000; font-size: 15px; font-weight: 600; }
+.divider { width: 100%; height: 1.5px; background-color: #767676; margin: 18px 0 20px; }
+
+/* 소형 버튼 */
+.register-btn { background-color: #000000; color: #ffffff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; }
+
+/* 하단 공유 바 */
+.bottom-action-bar { display: flex; flex-direction: row; gap: 10px; width: 100%; margin-top: 0; }
+.priority-btn { flex: 1; height: 54px; background-color: #d9d9d9; border-radius: 10px; border: none; color: #000000; font-size: 17px; font-weight: 600; cursor: pointer; }
+.share-btn { width: 54px; height: 54px; background-color: #d9d9d9; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.share-icon { width: 22px; height: 22px; color: #000000; }
+
+/* 모달 팝업 */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; box-sizing: border-box; }
+.modal-content { background-color: #ffffff; border-radius: 16px; padding: 24px; width: 100%; max-width: 320px; box-sizing: border-box; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+.modal-title { margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: #000000; }
+.modal-desc { margin: 0 0 16px 0; font-size: 13px; color: #666666; }
+.url-copy-box { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
+.url-input { flex: 1; border: 1px solid #d0d0d0; border-radius: 8px; padding: 10px; font-size: 13px; outline: none; background-color: #f9f9f9; color: #555555; box-sizing: border-box; }
+.copy-btn { background-color: #000000; color: #ffffff; border: none; border-radius: 8px; padding: 0 14px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.modal-close-btn { width: 100%; height: 44px; background-color: #f0f0f0; border: none; border-radius: 8px; color: #333333; font-size: 14px; font-weight: 600; cursor: pointer; }

@@ -1,0 +1,20 @@
+/* 래퍼 보정 (내부 요소들을 가운데로 모으기 위함) */
+.note-page-wrapper { align-items: center; }
+.note-container { width: 100%; max-width: 390px; display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
+
+/* 비고 헤더 및 건너뛰기 */
+.note-header { width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.note-title { color: #000000; font-size: 20px; font-weight: 700; margin: 0; text-align: left; }
+.skip-btn { background: none; border: none; color: #c4c4c4; font-size: 17px; font-weight: 600; cursor: pointer; padding: 0; outline: none; }
+.skip-btn:hover { color: #888888; }
+
+/* 입력창 및 저장 버튼 */
+.input-box-wrapper { width: 100%; margin-bottom: 36px; display: flex; flex-direction: column; gap: 16px; }
+.input-row { display: flex; flex-direction: row; gap: 8px; width: 100%; }
+.save-note-btn { height: 52px; background-color: #111111; color: #ffffff; border: none; border-radius: 10px; padding: 0 20px; font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
+/* 누적된 메모 목록 */
+.saved-notes-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.saved-note-item { background: #f8f8f8; border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; border: 1px solid #e5e5e5; }
+.note-time-badge { font-size: 12px; color: #777777; font-weight: 600; }
+.note-text-content { font-size: 15px; color: #111111; font-weight: 500; }

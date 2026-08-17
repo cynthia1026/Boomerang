@@ -1,0 +1,13 @@
+/* 안내 타이틀 및 서브 */
+.guide-section { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 28px; }
+.guide-title { color: #000000; font-size: 19px; font-weight: 700; margin: 0; text-align: left; }
+.guide-sub { color: #000000; font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+
+/* 토글 스위치 */
+.toggle-row { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+.toggle-switch { display: inline-flex; background-color: #d9d9d9; border-radius: 8px; padding: 3px; gap: 2px; }
+.toggle-btn { border: none; background: transparent; padding: 6px 14px; border-radius: 6px; font-size: 15px; font-weight: 700; color: #ffffff; cursor: pointer; outline: none; transition: background-color 0.2s ease, color 0.2s ease; }
+.toggle-btn.active { background-color: #000000; color: #ffffff; }
+
+/* 시간등록 테이블 스크롤 보정 여백 */
+.table-wrapper { width: 100%; max-width: 320px; margin-bottom: 36px; }
