@@ -29,7 +29,15 @@ export async function getRoomDetails(roomId) {
 
   if (scheduleError) throw scheduleError;
 
-  return { room, schedules };
+  // ★ 결과 페이지에서 보여줄 메모(notes) 데이터도 함께 불러옵니다.
+  const { data: notes, error: notesError } = await supabase
+    .from('notes')
+    .select('*')
+    .eq('room_id', roomId);
+
+  if (notesError) throw notesError;
+
+  return { room, schedules, notes };
 }
 
 // 3. 특정 유저의 기존 일정 및 메모 조회 (로그인 검증 및 수정용)
