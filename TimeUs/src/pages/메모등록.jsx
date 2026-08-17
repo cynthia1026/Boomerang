@@ -26,11 +26,9 @@ export default function AddNote() {
         setDates(generateDates(room.start_date, room.end_date));
         setTimes(generateTimes(room.start_time, room.end_time));
         
-        // 이전 페이지에서 방금 확정한 일정 불러오기
         const sessionSlots = JSON.parse(sessionStorage.getItem('fixedSlots') || '[]');
         setFixedSlots(new Set(sessionSlots));
 
-        // 수정 모드인 경우: 기존 메모 목록 복원
         const prevNotes = JSON.parse(sessionStorage.getItem('existingNotes') || '[]');
         if (prevNotes.length > 0) {
           setSavedNotes(prevNotes);
@@ -48,14 +46,26 @@ export default function AddNote() {
   const dragAction = useRef(true);
 
   const toggleNoteSlot = (key, forcedAction = null) => {
+    // ★ 선택 안 된(불가능한) 시간은 클릭/드래그 무시
+    if (!fixedSlots.has(key)) return false; 
+
     const newNoteSlots = new Set(noteSlots);
     const shouldAdd = forcedAction !== null ? forcedAction : !newNoteSlots.has(key);
     if (shouldAdd) newNoteSlots.add(key); else newNoteSlots.delete(key);
     setNoteSlots(newNoteSlots);
     return shouldAdd;
   };
-  const handleSlotMouseDown = (key) => { isDragging.current = true; dragAction.current = !noteSlots.has(key); toggleNoteSlot(key, dragAction.current); };
-  const handleSlotMouseEnter = (key) => { if (!isDragging.current) return; toggleNoteSlot(key, dragAction.current); };
+
+  const handleSlotMouseDown = (key) => { 
+    if (!fixedSlots.has(key)) return; // 불가능한 시간이면 작동안함
+    isDragging.current = true; 
+    dragAction.current = !noteSlots.has(key); 
+    toggleNoteSlot(key, dragAction.current); 
+  };
+  const handleSlotMouseEnter = (key) => { 
+    if (!isDragging.current) return; 
+    toggleNoteSlot(key, dragAction.current); 
+  };
   const handleTouchMove = (e) => {
     if (!isDragging.current) return;
     const td = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)?.closest('td');
@@ -89,7 +99,6 @@ export default function AddNote() {
         time_labels: JSON.stringify(n.timeLabels)
       }));
 
-      // 기존 메모를 지우고 최신 메모 목록으로 업데이트
       await saveUserNotes(roomId, userName, dbNotes);
     } catch (err) {
       console.error("메모 저장 실패:", err);
@@ -113,9 +122,22 @@ export default function AddNote() {
         <Table dates={DATES} times={TIMES} renderSlot={(dIdx, tIdx, key) => {
             const isFixed = fixedSlots.has(key);
             const isNote = noteSlots.has(key);
-            let bgColor = '#ffffff';
-            if (isNote) bgColor = '#777777'; else if (isFixed) bgColor = '#b5b5b5';
-            return <td key={dIdx} data-slot-key={key} className="base-table-slot" style={{ backgroundColor: bgColor }} onMouseDown={() => handleSlotMouseDown(key)} onMouseEnter={() => handleSlotMouseEnter(key)} onTouchStart={() => handleSlotMouseDown(key)} />
+            let bgColor = '#ffffff'; // 선택 안된 시간
+            if (isNote) bgColor = '#777777'; 
+            else if (isFixed) bgColor = '#b5b5b5'; 
+            
+            return (
+              <td 
+                key={dIdx} 
+                data-slot-key={key} 
+                className="base-table-slot" 
+                // 선택 불가능한 칸은 마우스 커서를 다르게 표시
+                style={{ backgroundColor: bgColor, cursor: isFixed ? 'pointer' : 'not-allowed' }} 
+                onMouseDown={() => handleSlotMouseDown(key)} 
+                onMouseEnter={() => handleSlotMouseEnter(key)} 
+                onTouchStart={() => handleSlotMouseDown(key)} 
+              />
+            )
         }} />
 
         <div className="input-box-wrapper">
@@ -127,7 +149,10 @@ export default function AddNote() {
             <div className="saved-notes-list">
               {savedNotes.map(n => (
                 <div key={n.id} className="saved-note-item">
-                  <div className="note-time-badge">{n.timeLabels[0]} {n.timeLabels.length > 1 ? `외 ${n.timeLabels.length - 1}개` : ''}</div>
+                  {/* ★ '외 n개' 대신 모든 시간대를 쉼표로 연결해서 표시 */}
+                  <div className="note-time-badge" style={{ wordBreak: 'keep-all', lineHeight: '1.4' }}>
+                    {n.timeLabels.join(', ')}
+                  </div>
                   <div className="note-text-content">{n.text}</div>
                 </div>
               ))}
