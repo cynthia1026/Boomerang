@@ -231,14 +231,21 @@
   font-size: 15px;
 }
 
-/* -----------------------------
-   뒤로가기 버튼 (검은 바탕 오버라이드)
------------------------------- */
-.back-btn {
-  background-color: #111111;
-  color: #ffffff;
+/* 펼쳐보기 버튼 */
+.expand-btn {
+  width: 100%;
+  height: 48px;
+  background-color: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: -4px;
+  transition: background-color 0.15s ease;
 }
 
-.back-btn:hover {
-  background-color: #333333;
+.expand-btn:hover {
+  background-color: #f7f7f7;
 }
