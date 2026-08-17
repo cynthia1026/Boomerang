@@ -108,11 +108,6 @@ export default function Priority() {
 
   return (
     <div className="priority-container">
-      {/* 상단 로고 및 상단 뒤로가기 버튼 영역 */}
-      <div className="priority-top-nav">
-        <h1 className="logo-title" style={{ margin: 0 }}>TimeUs</h1>
-      </div>
-      
       <div className="priority-header" style={{ marginTop: '24px' }}>
         <h2 className="priority-title">가능한 시간 우선순위</h2>
         <p className="priority-sub">가장 많은 인원이 겹치는 시간대입니다.</p>
