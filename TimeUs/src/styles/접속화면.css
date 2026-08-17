@@ -1,3 +1,17 @@
+/* 접속화면 특화 래퍼 (수직 중앙 정렬) */
+.div {
+  background: #ffffff; width: 100%; min-height: 100vh; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 24px;
+}
+.frame-2 { display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; min-height: 400px; }
+.frame-1 { display: flex; flex-direction: column; gap: 12px; align-items: left; text-align: left; margin-top: auto; margin-bottom: auto; }
+.time-us { font-size: 40px; margin-bottom: 10px; } /* 로고 오버라이드 */
+.div2 { color: #666666; font-size: 16px; font-weight: 400; }
+.rectangle-1 { display: none; }
+
+/* 검은색 시작 버튼 */
+.div3 { width: 100%; height: 52px; background: #111111; color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; cursor: pointer; border: none; outline: none; }
+
 /* 버튼 그룹 컨테이너 */
 .splash-btn-group {
   width: 100%;
