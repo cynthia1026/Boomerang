@@ -1,13 +1,109 @@
-/* 접속화면 특화 래퍼 (수직 중앙 정렬) */
-.div {
-  background: #ffffff; width: 100%; min-height: 100vh; box-sizing: border-box;
-  display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 24px;
+/* 버튼 그룹 컨테이너 */
+.splash-btn-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.frame-2 { display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; min-height: 400px; }
-.frame-1 { display: flex; flex-direction: column; gap: 12px; align-items: left; text-align: left; margin-top: auto; margin-bottom: auto; }
-.time-us { font-size: 40px; margin-bottom: 10px; } /* 로고 오버라이드 */
-.div2 { color: #666666; font-size: 16px; font-weight: 400; }
-.rectangle-1 { display: none; }
 
-/* 검은색 시작 버튼 */
-.div3 { width: 100%; height: 52px; background: #111111; color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; cursor: pointer; border: none; outline: none; }
+/* 두 번째 참여하기 버튼 스타일 (필요시 색상 구분 가능) */
+.div3.sub-btn {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #111111;
+}
+
+.div3.sub-btn:hover {
+  background: #f7f7f7;
+}
+
+/* 모달 및 팝업 관련 스타일 (결과.css와 통일) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.modal-desc {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: #666666;
+}
+
+.url-copy-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.url-input {
+  flex: 1;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  outline: none;
+  background-color: #f9f9f9;
+  color: #555555;
+  box-sizing: border-box;
+}
+
+.modal-btn-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.copy-btn {
+  flex: 1;
+  background-color: #111111;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-close-btn {
+  flex: 1;
+  height: 44px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
