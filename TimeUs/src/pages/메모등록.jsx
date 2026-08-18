@@ -5,6 +5,73 @@ import { getRoomDetails, saveUserNotes } from '../api/roomApi';
 import { generateDates, generateTimes } from '../utils/schedule';
 import '../styles/메모등록.css';
 
+// 30분 단위 시간 계산 유틸
+const add30Minutes = (timeStr) => {
+  const [h, m] = timeStr.split(':').map(Number);
+  let nextM = m + 30;
+  let nextH = h;
+  if (nextM >= 60) {
+    nextH += 1;
+    nextM = 0;
+  }
+  return `${String(nextH).padStart(2, '0')}:${String(nextM).padStart(2, '0')}`;
+};
+
+const timeToMinutes = (timeStr) => {
+  const [h, m] = timeStr.split(':').map(Number);
+  return h * 60 + m;
+};
+
+// 날짜/구간 병합 함수
+const formatGroupedTimeRanges = (timeLabels) => {
+  if (!timeLabels || timeLabels.length === 0) return [];
+  const dateMap = {};
+  timeLabels.forEach((label) => {
+    const parts = label.trim().split(' ');
+    if (parts.length >= 3) {
+      const dateKey = `${parts[0]} ${parts[1]}`;
+      const timeVal = parts[2];
+      if (!dateMap[dateKey]) dateMap[dateKey] = [];
+      dateMap[dateKey].push(timeVal);
+    } else {
+      if (!dateMap['기타']) dateMap['기타'] = [];
+      dateMap['기타'].push(label);
+    }
+  });
+
+  const resultLines = [];
+  Object.keys(dateMap).forEach((dateKey) => {
+    const times = Array.from(new Set(dateMap[dateKey])).sort(
+      (a, b) => timeToMinutes(a) - timeToMinutes(b)
+    );
+
+    const ranges = [];
+    let start = times[0];
+    let prev = times[0];
+
+    for (let i = 1; i < times.length; i++) {
+      const current = times[i];
+      if (timeToMinutes(current) === timeToMinutes(prev) + 30) {
+        prev = current;
+      } else {
+        ranges.push(`${start} ~ ${add30Minutes(prev)}`);
+        start = current;
+        prev = current;
+      }
+    }
+    if (start) {
+      ranges.push(`${start} ~ ${add30Minutes(prev)}`);
+    }
+
+    resultLines.push({
+      date: dateKey,
+      timeString: ranges.join(', ')
+    });
+  });
+
+  return resultLines;
+};
+
 export default function AddNote() {
   const navigate = useNavigate();
   const { roomId } = useParams();
@@ -46,7 +113,6 @@ export default function AddNote() {
   const dragAction = useRef(true);
 
   const toggleNoteSlot = (key, forcedAction = null) => {
-    // ★ 선택 안 된(불가능한) 시간은 클릭/드래그 무시
     if (!fixedSlots.has(key)) return false; 
 
     const newNoteSlots = new Set(noteSlots);
@@ -57,7 +123,7 @@ export default function AddNote() {
   };
 
   const handleSlotMouseDown = (key) => { 
-    if (!fixedSlots.has(key)) return; // 불가능한 시간이면 작동안함
+    if (!fixedSlots.has(key)) return; 
     isDragging.current = true; 
     dragAction.current = !noteSlots.has(key); 
     toggleNoteSlot(key, dragAction.current); 
@@ -122,7 +188,7 @@ export default function AddNote() {
         <Table dates={DATES} times={TIMES} renderSlot={(dIdx, tIdx, key) => {
             const isFixed = fixedSlots.has(key);
             const isNote = noteSlots.has(key);
-            let bgColor = '#ffffff'; // 선택 안된 시간
+            let bgColor = '#ffffff';
             if (isNote) bgColor = '#777777'; 
             else if (isFixed) bgColor = '#b5b5b5'; 
             
@@ -131,7 +197,6 @@ export default function AddNote() {
                 key={dIdx} 
                 data-slot-key={key} 
                 className="base-table-slot" 
-                // 선택 불가능한 칸은 마우스 커서를 다르게 표시
                 style={{ backgroundColor: bgColor, cursor: isFixed ? 'pointer' : 'not-allowed' }} 
                 onMouseDown={() => handleSlotMouseDown(key)} 
                 onMouseEnter={() => handleSlotMouseEnter(key)} 
@@ -147,15 +212,21 @@ export default function AddNote() {
           </div>
           {savedNotes.length > 0 && (
             <div className="saved-notes-list">
-              {savedNotes.map(n => (
-                <div key={n.id} className="saved-note-item">
-                  {/* ★ '외 n개' 대신 모든 시간대를 쉼표로 연결해서 표시 */}
-                  <div className="note-time-badge" style={{ wordBreak: 'keep-all', lineHeight: '1.4' }}>
-                    {n.timeLabels.join(', ')}
+              {savedNotes.map(n => {
+                const formattedGroups = formatGroupedTimeRanges(n.timeLabels);
+                return (
+                  <div key={n.id} className="saved-note-item">
+                    <div className="note-time-badge" style={{ lineHeight: '1.4' }}>
+                      {formattedGroups.map((grp, gIdx) => (
+                        <div key={gIdx}>
+                          <strong>{grp.date}</strong> {grp.timeString}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="note-text-content">{n.text}</div>
                   </div>
-                  <div className="note-text-content">{n.text}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
