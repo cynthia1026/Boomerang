@@ -4,6 +4,7 @@
   max-width: 100%;
   overflow-x: auto;
   margin: 0 auto 24px; /* 중앙 정렬 */
+  padding : 20px;
   padding-bottom: 8px;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
