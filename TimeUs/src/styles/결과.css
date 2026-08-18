@@ -83,15 +83,10 @@
 /* 그리드 슬롯 강조 (테두리 및 밝은 노란색 강조) */
 .base-table-slot.result-slot.note-highlighted {
   position: relative;
-  outline: 3px solid #000000 !important;
+  outline: 3px #000000 !important;
   outline-offset: -2px;
   z-index: 10;
   animation: pulse 1s infinite alternate;
-}
-
-@keyframes pulse {
-  0% { transform: scale(0.98); }
-  100% { transform: scale(1.02); }
 }
 
 /* 선택된 비고 메모 카드 스타일 */
