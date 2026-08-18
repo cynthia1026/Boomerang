@@ -5,6 +5,77 @@ import { getRoomDetails } from '../api/roomApi';
 import { generateDates, generateTimes } from '../utils/schedule';
 import '../styles/결과.css';
 
+// 30분 단위 문자열("HH:mm")을 30분 뒤 시간으로 변환 (예: 18:00 -> 18:30)
+const add30Minutes = (timeStr) => {
+  const [h, m] = timeStr.split(':').map(Number);
+  let nextM = m + 30;
+  let nextH = h;
+  if (nextM >= 60) {
+    nextH += 1;
+    nextM = 0;
+  }
+  return `${String(nextH).padStart(2, '0')}:${String(nextM).padStart(2, '0')}`;
+};
+
+// 분 단위를 30분 단위 숫자로 변환 (연속 검사용)
+const timeToMinutes = (timeStr) => {
+  const [h, m] = timeStr.split(':').map(Number);
+  return h * 60 + m;
+};
+
+// '8.18 화 18:00, 8.18 화 18:30...' -> '8.18 화 18:00 ~ 23:00' 형태로 날짜별 병합하는 함수
+const formatGroupedTimeRanges = (timeLabels) => {
+  if (!timeLabels || timeLabels.length === 0) return [];
+
+  // 1. 날짜별로 그룹화: { '8.18 화': ['18:00', '18:30', ...] }
+  const dateMap = {};
+  timeLabels.forEach((label) => {
+    const parts = label.trim().split(' ');
+    if (parts.length >= 3) {
+      const dateKey = `${parts[0]} ${parts[1]}`;
+      const timeVal = parts[2];
+      if (!dateMap[dateKey]) dateMap[dateKey] = [];
+      dateMap[dateKey].push(timeVal);
+    } else {
+      if (!dateMap['기타']) dateMap['기타'] = [];
+      dateMap['기타'].push(label);
+    }
+  });
+
+  // 2. 각 날짜 안에서 연속된 시간을 구간으로 병합
+  const resultLines = [];
+  Object.keys(dateMap).forEach((dateKey) => {
+    const times = Array.from(new Set(dateMap[dateKey])).sort(
+      (a, b) => timeToMinutes(a) - timeToMinutes(b)
+    );
+
+    const ranges = [];
+    let start = times[0];
+    let prev = times[0];
+
+    for (let i = 1; i < times.length; i++) {
+      const current = times[i];
+      if (timeToMinutes(current) === timeToMinutes(prev) + 30) {
+        prev = current;
+      } else {
+        ranges.push(`${start} ~ ${add30Minutes(prev)}`);
+        start = current;
+        prev = current;
+      }
+    }
+    if (start) {
+      ranges.push(`${start} ~ ${add30Minutes(prev)}`);
+    }
+
+    resultLines.push({
+      date: dateKey,
+      timeString: ranges.join(', ')
+    });
+  });
+
+  return resultLines;
+};
+
 export default function Result() {
   const navigate = useNavigate();
   const { roomId } = useParams();
@@ -18,14 +89,11 @@ export default function Result() {
   const [roomInfo, setRoomInfo] = useState({ headcount: 0 });
   const [participants, setParticipants] = useState([]);
   const [scheduleMatrix, setScheduleMatrix] = useState([]); 
-  
-  // ★ 메모 데이터를 담을 상태 추가
   const [roomNotes, setRoomNotes] = useState([]);
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        // api에서 notes도 함께 받아옴
         const { room, schedules, notes } = await getRoomDetails(roomId);
         
         const datesArr = generateDates(room.start_date, room.end_date);
@@ -77,14 +145,24 @@ export default function Result() {
 
   return (
     <div className="result-container">
-      <h1 className="logo-title">TimeUs</h1>
+      {/* 상단 로고 및 새 방 생성 버튼 */}
+      <div className="result-top-header">
+        <h1 className="logo-title">TimeUs</h1>
+        <button 
+          type="button" 
+          className="new-room-btn" 
+          onClick={() => navigate('/room')}
+        >
+          + 새 약속 만들기
+        </button>
+      </div>
       
       <section className="status-section">
         <div className="section-header">
           <h2 className="section-title">실시간 참여 현황</h2>
           <span className="count-badge">{participants.length}/{roomInfo.headcount}</span>
         </div>
-        <div className="user-tag-list" style={{ flexWrap: 'wrap' }}>
+        <div className="user-tag-list">
           {participants.map((name, idx) => (
             <div key={idx} className="user-tag">{name}</div>
           ))}
@@ -116,7 +194,7 @@ export default function Result() {
         />
       </section>
 
-      {/* ★ 비고(메모) 섹션 렌더링 */}
+      {/* 비고(메모) 섹션 - 가독성 높은 날짜/구간별 렌더링 */}
       {roomNotes.length > 0 && (
         <>
           <div className="divider" />
@@ -125,25 +203,32 @@ export default function Result() {
               <h2 className="section-title">비고 (메모)</h2>
             </div>
             <div className="result-notes-list">
-              {roomNotes.map(n => {
+              {roomNotes.map((n) => {
                 const parsedLabels = typeof n.time_labels === 'string' ? JSON.parse(n.time_labels) : n.time_labels;
+                const formattedGroups = formatGroupedTimeRanges(parsedLabels);
+
                 return (
                   <div key={n.id} className="result-note-item">
                     <div className="result-note-header">
                       <span className="note-author">{n.user_name}</span>
-                      <span className="note-time-detailed">{parsedLabels.join(', ')}</span>
+                      <div className="note-time-detailed">
+                        {formattedGroups.map((grp, gIdx) => (
+                          <div key={gIdx}>
+                            <strong>{grp.date}</strong> {grp.timeString}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div className="note-content">{n.content}</div>
                   </div>
-                )
+                );
               })}
             </div>
           </section>
         </>
       )}
 
-      {/* 하단 공유 바 margin 수정(상단 여백 20px) */}
-      <div className="bottom-action-bar" style={{ marginTop: '20px' }}>
+      <div className="bottom-action-bar">
         <button type="button" className="priority-btn" onClick={() => navigate(`/room/${roomId}/priority`)}>
           우선순위 보기
         </button>
