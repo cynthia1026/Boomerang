@@ -182,7 +182,6 @@ export default function AddNote() {
         <h1 className="logo-title">TimeUs</h1>
         <div className="note-header">
           <h2 className="note-title">비고</h2>
-          <button className="skip-btn" onClick={handleComplete}>건너뛰기</button>
         </div>
 
         <Table dates={DATES} times={TIMES} renderSlot={(dIdx, tIdx, key) => {
