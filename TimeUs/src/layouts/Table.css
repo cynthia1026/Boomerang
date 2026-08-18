@@ -1,77 +1,78 @@
-/* 가로 스크롤 컨테이너 및 커스텀 스크롤바 */
-.table-scroll-container {
+/* 1. 페이지 전체 래퍼 (충분한 좌우 여백 확보) */
+.create-room-container,
+.schedule-container,
+.note-page-wrapper,
+.priority-container {
+  background: #ffffff;
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  margin-bottom: 24px;
-  padding-bottom: 8px;
+  min-height: 100vh;
   box-sizing: border-box;
+  padding: 40px 36px 30px; /* 좌우 36px 여백 */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.table-scroll-container::-webkit-scrollbar {
-  height: 6px;
-}
-.table-scroll-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-.table-scroll-container::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-.table-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #999999;
+/* 2. 공통 로고 타이틀 */
+.logo-title,
+.time-us {
+  color: #000000;
+  font-size: 36px;
+  font-weight: 800;
+  text-align: left;
+  margin: 0 0 32px 0;
+  letter-spacing: -0.5px;
 }
 
-/* 테이블 본체 구조 */
-.schedule-table {
-  width: auto;
-  min-width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #333333;
-}
-
-.schedule-table th,
-.schedule-table td {
-  border: 1px solid #333333;
-  height: 34px;
-  min-width: 80px; 
-  text-align: center;
-  vertical-align: middle;
-  padding: 0;
+/* 3. 공통 입력창 (Input) */
+.form-input,
+.note-input,
+.login-input {
+  width: 100%;
+  height: 52px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #767676;
   box-sizing: border-box;
+  padding: 0 16px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+  color: #111111;
 }
 
-/* 좌측 시간 라벨 열 고정 (Sticky Header) */
-.sticky-col {
-  position: sticky;
-  left: 0;
-  z-index: 2;
-  min-width: 60px !important;
-  width: 60px;
-  background-color: #ffffff;
-  border-right: 2px solid #333333 !important;
+.form-input:focus,
+.note-input:focus,
+.login-input:focus {
+  border-color: #000000;
 }
 
-.date-header-cell {
-  font-size: 14px;
+.note-input::placeholder,
+.login-input::placeholder {
+  color: #c4c4c4;
+}
+
+/* 4. 화면 하단 공통 버튼 */
+.submit-btn,
+.next-btn,
+.back-btn,
+.login-submit-btn {
+  width: 100%;
+  height: 54px;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  border: none;
+  color: #000000;
+  font-size: 17px;
   font-weight: 600;
-  color: #000000;
-  background-color: #ffffff;
-  white-space: nowrap;
-  padding: 0 6px;
-}
-
-.time-label-cell {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
-}
-
-/* 슬롯 기본 공통 스타일 (각 페이지에서 색상 오버라이드) */
-.base-table-slot {
-  background-color: #ffffff;
   cursor: pointer;
-  touch-action: none;
-  transition: background-color 0.15s ease;
+  margin-top: auto;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover,
+.next-btn:hover,
+.back-btn:hover,
+.login-submit-btn:hover {
+  background-color: #cfcfcf;
 }
