@@ -1,17 +1,13 @@
-/* 가로 스크롤 컨테이너 */
+/* 1. 가로 스크롤 컨테이너 */
 .table-scroll-container {
   width: 100%;
-  max-width: 100%;
   overflow-x: auto;
-  margin: 0 auto 24px; /* 중앙 정렬 */
-  padding-bottom: 8px;
-  box-sizing: border-box;
+  margin-bottom: 24px;
   -webkit-overflow-scrolling: touch;
-  display: flex;
-  justify-content: center; /* 내용이 적을 때 가운데 정렬 */
+  /* flex나 padding 속성을 삭제하여 외부 여백(common.css)과 충돌 방지 */
 }
 
-/* 커스텀 스크롤바 */
+/* 2. 커스텀 스크롤바 */
 .table-scroll-container::-webkit-scrollbar {
   height: 6px;
 }
@@ -24,51 +20,51 @@
   border-radius: 4px;
 }
 
-/* 테이블 본체 구조 (또렷한 외곽선 및 격자 복구) */
+/* 3. 테이블 본체 구조 */
 .schedule-table {
-  width: max-content; /* 내용에 맞춰 시원하게 확장 */
-  min-width: 100%;
+  width: max-content; /* 글씨가 안 깨지게 고유 너비 확보 */
+  min-width: 100%; /* 내용이 적을 땐 화면에 꽉 차게 (가운데 정렬 대신 꽉 채워서 예쁘게 맞춤) */
   border-collapse: collapse;
-  border: 1.5px solid #111111; /* 선명한 테이블 외곽선 */
+  border: 1.5px solid #111111;
   background-color: #ffffff;
-  margin: 0 auto; /* 표 자체 중앙 정렬 */
-  box-sizing: border-box;
+  /* margin: 0 auto; 삭제 (Sticky 겹침 버그의 주범) */
 }
 
 .schedule-table th,
 .schedule-table td {
-  border: 1px solid #111111; /* 확실한 내부 격자 테두리선 */
+  border: 1px solid #111111;
   height: 36px;
-  min-width: 84px; /* 글씨가 찌그러지지 않는 넉넉한 칸 너비 */
+  min-width: 76px; /* 글씨가 들어갈 최소 너비 조정 */
   text-align: center;
   vertical-align: middle;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 좌측 시간 라벨 열 고정 (Sticky Column) */
+/* 4. 좌측 시간 라벨 열 고정 (Sticky Column) */
 .sticky-col {
   position: sticky;
   left: 0;
   z-index: 3;
   width: 60px !important;
   min-width: 60px !important;
-  background-color: #ffffff;
-  border-right: 2px solid #111111 !important; /* 시간 구분선 강조 */
+  max-width: 60px !important;
+  background-color: #ffffff !important; /* 배경색을 흰색으로 고정하여 뒷배경 비침 방지 */
+  border-right: 1.5px solid #111111 !important; /* 시간 구분선 강조 */
 }
 
-/* 날짜 헤더 셀 */
+/* 5. 날짜 헤더 셀 */
 .date-header-cell {
   font-size: 14px;
   font-weight: 700;
   color: #111111;
   background-color: #ffffff;
   white-space: nowrap;
-  padding: 6px 8px;
-  letter-spacing: -0.2px; /* 가독성 좋은 자간 */
+  padding: 6px 4px;
+  letter-spacing: -0.2px;
 }
 
-/* 시간 라벨 셀 */
+/* 6. 시간 라벨 셀 */
 .time-label-cell {
   font-size: 13px;
   font-weight: 600;
@@ -76,7 +72,7 @@
   letter-spacing: -0.2px;
 }
 
-/* 슬롯 기본 공통 스타일 */
+/* 7. 슬롯 기본 공통 스타일 */
 .base-table-slot {
   background-color: #ffffff;
   cursor: pointer;
