@@ -1,78 +1,86 @@
-/* 1. 페이지 전체 래퍼 (충분한 좌우 여백 확보) */
-.create-room-container,
-.schedule-container,
-.note-page-wrapper,
-.priority-container {
-  background: #ffffff;
+/* 가로 스크롤 컨테이너 */
+.table-scroll-container {
   width: 100%;
-  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 auto 24px; /* 중앙 정렬 */
+  padding-bottom: 8px;
   box-sizing: border-box;
-  padding: 40px 36px 30px; /* 좌우 36px 여백 */
+  -webkit-overflow-scrolling: touch;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  justify-content: center; /* 내용이 적을 때 가운데 정렬 */
 }
 
-/* 2. 공통 로고 타이틀 */
-.logo-title,
-.time-us {
-  color: #000000;
-  font-size: 36px;
-  font-weight: 800;
-  text-align: left;
-  margin: 0 0 32px 0;
-  letter-spacing: -0.5px;
+/* 커스텀 스크롤바 */
+.table-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+.table-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
 }
 
-/* 3. 공통 입력창 (Input) */
-.form-input,
-.note-input,
-.login-input {
-  width: 100%;
-  height: 52px;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #767676;
+/* 테이블 본체 구조 (또렷한 외곽선 및 격자 복구) */
+.schedule-table {
+  width: max-content; /* 내용에 맞춰 시원하게 확장 */
+  min-width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #111111; /* 선명한 테이블 외곽선 */
+  background-color: #ffffff;
+  margin: 0 auto; /* 표 자체 중앙 정렬 */
   box-sizing: border-box;
-  padding: 0 16px;
-  font-size: 15px;
-  outline: none;
-  font-family: inherit;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid #111111; /* 확실한 내부 격자 테두리선 */
+  height: 36px;
+  min-width: 84px; /* 글씨가 찌그러지지 않는 넉넉한 칸 너비 */
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 좌측 시간 라벨 열 고정 (Sticky Column) */
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 60px !important;
+  min-width: 60px !important;
+  background-color: #ffffff;
+  border-right: 2px solid #111111 !important; /* 시간 구분선 강조 */
+}
+
+/* 날짜 헤더 셀 */
+.date-header-cell {
+  font-size: 14px;
+  font-weight: 700;
   color: #111111;
+  background-color: #ffffff;
+  white-space: nowrap;
+  padding: 6px 8px;
+  letter-spacing: -0.2px; /* 가독성 좋은 자간 */
 }
 
-.form-input:focus,
-.note-input:focus,
-.login-input:focus {
-  border-color: #000000;
-}
-
-.note-input::placeholder,
-.login-input::placeholder {
-  color: #c4c4c4;
-}
-
-/* 4. 화면 하단 공통 버튼 */
-.submit-btn,
-.next-btn,
-.back-btn,
-.login-submit-btn {
-  width: 100%;
-  height: 54px;
-  background-color: #d9d9d9;
-  border-radius: 10px;
-  border: none;
-  color: #000000;
-  font-size: 17px;
+/* 시간 라벨 셀 */
+.time-label-cell {
+  font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  margin-top: auto;
-  transition: background-color 0.2s ease;
+  color: #111111;
+  letter-spacing: -0.2px;
 }
 
-.submit-btn:hover,
-.next-btn:hover,
-.back-btn:hover,
-.login-submit-btn:hover {
-  background-color: #cfcfcf;
+/* 슬롯 기본 공통 스타일 */
+.base-table-slot {
+  background-color: #ffffff;
+  cursor: pointer;
+  touch-action: none;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease;
 }
