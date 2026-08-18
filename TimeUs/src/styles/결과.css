@@ -1,40 +1,70 @@
-/* 상단 결과화면 특화 래퍼 부분 수정 */
+/* 결과화면 특화 래퍼 */
 .result-container {
   background: #ffffff; 
   width: 100%; 
   min-height: 100vh; 
   box-sizing: border-box; 
-  padding: 40px 20px 20px; /* 좌우/하단 패딩 20px로 수정 */
+  padding: 40px 32px 30px; /* 좌우 32px 패딩 적용 */
   display: flex; 
   flex-direction: column; 
   align-items: flex-start; 
-  justify-content: flex-start; /* center에서 flex-start로 변경하여 스크롤 자연스럽게 */
+  justify-content: flex-start;
   position: relative;
 }
 
-/* 결과 페이지 메모 섹션 스타일 추가 (결과.css 맨 아래에 추가) */
-.notes-section { width: 100%; display: flex; flex-direction: column; align-items: flex-start; margin-top: 10px; margin-bottom: 20px; }
-.result-notes-list { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.result-note-item { background: #f8f8f8; border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; border: 1px solid #e5e5e5; width: 100%; box-sizing: border-box; }
-.result-note-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.note-author { font-size: 13px; font-weight: 700; color: #111; white-space: nowrap; }
-.note-time-detailed { font-size: 12px; color: #777; font-weight: 500; text-align: right; word-break: keep-all; line-height: 1.4; }
-.note-content { font-size: 14px; color: #111; font-weight: 500; margin-top: 4px; }
+/* 상단 헤더 (로고 + 새 방 생성 버튼) */
+.result-top-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.result-top-header .logo-title {
+  font-size: 36px;
+  margin: 0;
+}
+.new-room-btn {
+  background-color: #ffffff;
+  color: #111111;
+  border: 1px solid #767676;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.new-room-btn:hover {
+  background-color: #f0f0f0;
+  border-color: #000000;
+}
 
 /* 섹션 및 태그 */
 .status-section, .schedule-section { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
 .section-header { width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .section-title { color: #000000; font-size: 20px; font-weight: 700; margin: 0; text-align: left; }
 .count-badge { color: #c4c4c4; font-size: 17px; font-weight: 500; }
-.user-tag-list { display: flex; flex-direction: row; gap: 8px; }
+.user-tag-list { display: flex; flex-direction: row; gap: 8px; flex-wrap: wrap; }
 .user-tag { width: 90px; height: 38px; background-color: #d9d9d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #000000; font-size: 15px; font-weight: 600; }
 .divider { width: 100%; height: 1.5px; background-color: #767676; margin: 18px 0 20px; }
 
 /* 소형 버튼 */
 .register-btn { background-color: #000000; color: #ffffff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; }
 
+/* 비고 (메모) 섹션 */
+.notes-section { width: 100%; display: flex; flex-direction: column; align-items: flex-start; margin-top: 10px; margin-bottom: 20px; }
+.result-notes-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.result-note-item { background: #f8f8f8; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #e5e5e5; width: 100%; box-sizing: border-box; }
+.result-note-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.note-author { font-size: 14px; font-weight: 700; color: #111111; white-space: nowrap; }
+.note-time-detailed { font-size: 13px; color: #555555; font-weight: 500; text-align: right; line-height: 1.5; }
+.note-content { font-size: 14px; color: #111111; font-weight: 600; margin-top: 4px; background: #ffffff; padding: 10px 12px; border-radius: 6px; border: 1px solid #ececec; word-break: break-word; }
+
 /* 하단 공유 바 */
-.bottom-action-bar { display: flex; flex-direction: row; gap: 10px; width: 100%; margin-top: 0; }
+.bottom-action-bar { display: flex; flex-direction: row; gap: 10px; width: 100%; margin-top: 20px; }
 .priority-btn { flex: 1; height: 54px; background-color: #d9d9d9; border-radius: 10px; border: none; color: #000000; font-size: 17px; font-weight: 600; cursor: pointer; }
 .share-btn { width: 54px; height: 54px; background-color: #d9d9d9; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 .share-icon { width: 22px; height: 22px; color: #000000; }
