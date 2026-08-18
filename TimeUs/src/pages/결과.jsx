@@ -5,7 +5,7 @@ import { getRoomDetails } from '../api/roomApi';
 import { generateDates, generateTimes } from '../utils/schedule';
 import '../styles/결과.css';
 
-// 30분 단위 문자열("HH:mm")을 30분 뒤 시간으로 변환 (예: 18:00 -> 18:30)
+// 30분 단위 문자열("HH:mm")을 30분 뒤 시간으로 변환
 const add30Minutes = (timeStr) => {
   const [h, m] = timeStr.split(':').map(Number);
   let nextM = m + 30;
@@ -17,17 +17,15 @@ const add30Minutes = (timeStr) => {
   return `${String(nextH).padStart(2, '0')}:${String(nextM).padStart(2, '0')}`;
 };
 
-// 분 단위를 30분 단위 숫자로 변환 (연속 검사용)
 const timeToMinutes = (timeStr) => {
   const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
 };
 
-// '8.18 화 18:00, 8.18 화 18:30...' -> '8.18 화 18:00 ~ 23:00' 형태로 날짜별 병합하는 함수
+// 날짜별/구간별 텍스트 병합 유틸
 const formatGroupedTimeRanges = (timeLabels) => {
   if (!timeLabels || timeLabels.length === 0) return [];
 
-  // 1. 날짜별로 그룹화: { '8.18 화': ['18:00', '18:30', ...] }
   const dateMap = {};
   timeLabels.forEach((label) => {
     const parts = label.trim().split(' ');
@@ -42,7 +40,6 @@ const formatGroupedTimeRanges = (timeLabels) => {
     }
   });
 
-  // 2. 각 날짜 안에서 연속된 시간을 구간으로 병합
   const resultLines = [];
   Object.keys(dateMap).forEach((dateKey) => {
     const times = Array.from(new Set(dateMap[dateKey])).sort(
@@ -52,217 +49,3 @@ const formatGroupedTimeRanges = (timeLabels) => {
     const ranges = [];
     let start = times[0];
     let prev = times[0];
-
-    for (let i = 1; i < times.length; i++) {
-      const current = times[i];
-      if (timeToMinutes(current) === timeToMinutes(prev) + 30) {
-        prev = current;
-      } else {
-        ranges.push(`${start} ~ ${add30Minutes(prev)}`);
-        start = current;
-        prev = current;
-      }
-    }
-    if (start) {
-      ranges.push(`${start} ~ ${add30Minutes(prev)}`);
-    }
-
-    resultLines.push({
-      date: dateKey,
-      timeString: ranges.join(', ')
-    });
-  });
-
-  return resultLines;
-};
-
-export default function Result() {
-  const navigate = useNavigate();
-  const { roomId } = useParams();
-
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const [DATES, setDates] = useState([]);
-  const [TIMES, setTimes] = useState([]);
-  
-  const [roomInfo, setRoomInfo] = useState({ headcount: 0 });
-  const [participants, setParticipants] = useState([]);
-  const [scheduleMatrix, setScheduleMatrix] = useState([]); 
-  const [roomNotes, setRoomNotes] = useState([]);
-
-  useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const { room, schedules, notes } = await getRoomDetails(roomId);
-        
-        const datesArr = generateDates(room.start_date, room.end_date);
-        const timesArr = generateTimes(room.start_time, room.end_time);
-        
-        setDates(datesArr);
-        setTimes(timesArr);
-        setRoomInfo(room);
-        setRoomNotes(notes || []);
-
-        const uniqueUsers = [...new Set(schedules.map(s => s.user_name))];
-        setParticipants(uniqueUsers);
-
-        const matrix = Array(timesArr.length).fill(0).map(() => Array(datesArr.length).fill(0));
-        
-        schedules.forEach(sched => {
-          const slots = typeof sched.time_slots === 'string' ? JSON.parse(sched.time_slots) : sched.time_slots;
-          slots.forEach(slotKey => {
-            const [dIdx, tIdx] = slotKey.split('-').map(Number);
-            if (matrix[tIdx] !== undefined && matrix[tIdx][dIdx] !== undefined) {
-              matrix[tIdx][dIdx] += 1;
-            }
-          });
-        });
-        
-        setScheduleMatrix(matrix);
-      } catch (err) {
-        console.error("결과 조회 실패:", err);
-      }
-    };
-    fetchResults();
-  }, [roomId]);
-
-  const currentUrl = window.location.href;
-
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(currentUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const getCellBgColor = (count) => {
-    if (!count || count === 0) return '#ffffff';
-    const ratio = count / (roomInfo.headcount || 1);
-    if (ratio <= 0.3) return '#e0e0e0';
-    if (ratio <= 0.6) return '#b5b5b5';
-    return '#777777'; 
-  };
-
-  return (
-    <div className="result-container">
-      {/* 상단 로고 및 새 방 생성 버튼 */}
-      <div className="result-top-header">
-        <h1 className="logo-title">TimeUs</h1>
-        <button 
-          type="button" 
-          className="new-room-btn" 
-          onClick={() => navigate('/room')}
-        >
-          + 새 약속 만들기
-        </button>
-      </div>
-      
-      <section className="status-section">
-        <div className="section-header">
-          <h2 className="section-title">실시간 참여 현황</h2>
-          <span className="count-badge">{participants.length}/{roomInfo.headcount}</span>
-        </div>
-        <div className="user-tag-list">
-          {participants.map((name, idx) => (
-            <div key={idx} className="user-tag">{name}</div>
-          ))}
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      <section className="schedule-section">
-        <div className="section-header">
-          <h2 className="section-title">실시간 등록 현황</h2>
-          <button className="register-btn" onClick={() => navigate(`/room/${roomId}/login`)}>등록하기</button>
-        </div>
-
-        <Table 
-          dates={DATES} 
-          times={TIMES} 
-          renderSlot={(dateIdx, timeIdx) => {
-            const rowData = scheduleMatrix[timeIdx] || [];
-            const count = rowData[dateIdx] || 0;
-            return (
-              <td 
-                key={dateIdx} 
-                className="base-table-slot result-slot" 
-                style={{ backgroundColor: getCellBgColor(count) }} 
-              />
-            );
-          }} 
-        />
-      </section>
-
-      {/* 비고(메모) 섹션 - 가독성 높은 날짜/구간별 렌더링 */}
-      {roomNotes.length > 0 && (
-        <>
-          <div className="divider" />
-          <section className="notes-section">
-            <div className="section-header">
-              <h2 className="section-title">비고 (메모)</h2>
-            </div>
-            <div className="result-notes-list">
-              {roomNotes.map((n) => {
-                const parsedLabels = typeof n.time_labels === 'string' ? JSON.parse(n.time_labels) : n.time_labels;
-                const formattedGroups = formatGroupedTimeRanges(parsedLabels);
-
-                return (
-                  <div key={n.id} className="result-note-item">
-                    <div className="result-note-header">
-                      <span className="note-author">{n.user_name}</span>
-                      <div className="note-time-detailed">
-                        {formattedGroups.map((grp, gIdx) => (
-                          <div key={gIdx}>
-                            <strong>{grp.date}</strong> {grp.timeString}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="note-content">{n.content}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        </>
-      )}
-
-      <div className="bottom-action-bar">
-        <button type="button" className="priority-btn" onClick={() => navigate(`/room/${roomId}/priority`)}>
-          우선순위 보기
-        </button>
-        
-        <button type="button" className="share-btn" onClick={() => setShowShareModal(true)} aria-label="공유하기">
-          <svg className="share-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
-          </svg>
-        </button>
-      </div>
-
-      {showShareModal && (
-        <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title">약속 초대 링크</h3>
-            <p className="modal-desc">링크를 복사하여 친구들에게 공유해보세요.</p>
-            
-            <div className="url-copy-box">
-              <input type="text" readOnly value={currentUrl} className="url-input" />
-              <button type="button" onClick={handleCopyLink} className="copy-btn">
-                {copied ? '복사됨!' : '복사'}
-              </button>
-            </div>
-
-            <button
-              type="button"
-              className="modal-close-btn"
-              onClick={() => setShowShareModal(false)}
-            >
-              닫기
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
